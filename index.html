@@ -159,6 +159,29 @@ button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px sol
 .save-bar .secondary:active{background:rgba(255,255,255,0.08)}
 .save-bar .msg{font-size:.82rem;color:var(--acc);font-weight:500;min-height:1.2em}
 .save-bar input[type=file]{display:none}
+
+.dash{background:var(--card);border:1px solid var(--glass-border);border-radius:24px;padding:22px 18px;margin:18px 0;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px);box-shadow:0 4px 24px var(--glass-glow),inset 0 1px 0 rgba(255,255,255,0.04)}
+.dash-top{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.dash-ring{position:relative;width:72px;height:72px;flex:none}
+.dash-ring svg{width:72px;height:72px;transform:rotate(-90deg)}
+.dash-ring circle{fill:none;stroke-width:5;stroke-linecap:round}
+.dash-ring .bg{stroke:rgba(255,255,255,0.06)}
+.dash-ring .fg{stroke:var(--acc);transition:stroke-dashoffset .6s ease}
+.dash-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:800;color:var(--fghi);letter-spacing:-0.03em}
+.dash-msg{font-size:.92rem;color:var(--fghi);font-weight:600;line-height:1.35}
+.dash-sub{font-size:.8rem;color:var(--mut);margin-top:2px}
+.dash-bars{display:flex;flex-direction:column;gap:10px}
+.dash-row{display:flex;align-items:center;gap:10px}
+.dash-row .dash-lbl{min-width:88px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.dash-row .bar{height:6px;flex:1}
+.dash-row .bar i{background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.dash-row strong{font-size:.8rem;color:var(--acc);min-width:48px;text-align:right}
+.dash-today{margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:.85rem;color:var(--fg)}
+.dash-today-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--acc);margin-bottom:6px}
+.dash-today-item{display:flex;align-items:center;gap:8px;padding:3px 0;color:var(--mut);font-size:.84rem}
+.dash-today-item.ok{color:var(--acc)}
+.dash-today-item .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.1);flex:none}
+.dash-today-item.ok .dot{background:var(--acc)}
 </style>
 </head>
 <body>
@@ -178,6 +201,19 @@ button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px sol
 <span class="msg" id="dlMsg"></span>
 </div>
 </details>
+
+<div class="dash" id="dash">
+<div class="dash-top">
+<div class="dash-ring"><svg viewBox="0 0 72 72"><circle class="bg" cx="36" cy="36" r="30"/><circle class="fg" id="dashRing" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/></svg><span class="dash-pct" id="dashPct">0%</span></div>
+<div><div class="dash-msg" id="dashMsg">C'est parti !</div><div class="dash-sub" id="dashSub">Coche ta première action pour démarrer</div></div>
+</div>
+<div class="dash-bars">
+<div class="dash-row"><span class="dash-lbl">Programme</span><div class="bar"><i id="dashBar0"></i></div><strong id="dashCnt0">0/63</strong></div>
+<div class="dash-row"><span class="dash-lbl" id="dashWkLbl">Semaine 1</span><div class="bar"><i id="dashBar1"></i></div><strong id="dashCnt1">0/0</strong></div>
+<div class="dash-row"><span class="dash-lbl" id="dashDayLbl">Aujourd'hui</span><div class="bar"><i id="dashBar2"></i></div><strong id="dashCnt2">0/3</strong></div>
+</div>
+<div class="dash-today" id="dashToday"></div>
+</div>
 
 <p class="sub">Chaque jour : une ressource (le podcast Vendue de Laetitia Fall quand son thème colle mieux, sinon une vidéo), 2 actions importantes tirées de votre grille mandala, et des routines quotidiennes à part. Cochez au fur et à mesure.</p>
 
@@ -592,10 +628,83 @@ var li=el("li","",k+" "+a.short+" : "+done+" / "+a.steps.length+" étapes");ul.a
 var nm=0;for(var r2=0;r2<ACT[k].trk;r2++){if(store["t_"+k+"_"+r2+"_p"]||store["t_"+k+"_"+r2+"_n"])nm++}
 sm.appendChild(el("p","",(k==="A1"?"Gros clients":"Gros tontiniers")+" : "+nm+" personnes listées, "+called+" appelées, "+(cnt["Recommandation obtenue"]||0)+" recommandations obtenues, "+(cnt["Rendez-vous obtenu"]||0)+" rendez-vous obtenus, "+(cnt["Refus"]||0)+" refus."))});
 box.appendChild(sm)}
+var DASH_MSGS=[
+[0,"C'est parti !","Coche ta première action pour démarrer"],
+[5,"Premier pas fait !","Les débuts sont les plus importants"],
+[15,"Beau démarrage !","Tu construis ton élan"],
+[25,"Un quart du chemin !","Ta régularité commence à payer"],
+[33,"Un tiers !","Tu tiens le rythme, continue"],
+[50,"Mi-parcours !","La moitié est faite, bravo"],
+[66,"Deux tiers !","La ligne d'arrivée se rapproche"],
+[75,"Trois quarts !","Tu es dans la dernière ligne droite"],
+[90,"Presque fini !","Plus que quelques actions"],
+[100,"Programme terminé !","Félicitations, objectif atteint"]
+];
+function updDash(){
+var totalDone=0,totalAll=rBoxes.length+aBoxes.length;
+rBoxes.forEach(function(x){if(x.checked)totalDone++});
+aBoxes.forEach(function(x){if(x.checked)totalDone++});
+var pct=totalAll?Math.round(100*totalDone/totalAll):0;
+var circ=188.5;
+document.getElementById("dashRing").style.strokeDashoffset=circ-(circ*pct/100);
+document.getElementById("dashPct").textContent=pct+"%";
+document.getElementById("dashBar0").style.width=pct+"%";
+document.getElementById("dashCnt0").textContent=totalDone+"/"+totalAll;
+
+var today=new Date(),dd=today.getDate(),mm=today.getMonth();
+var todayId=0,todayWk=0;
+var n2=0;
+D.forEach(function(w,wi){w.slice(1).forEach(function(r){n2++;
+var m=/(\d+)\s+(oct|nov)/.exec(r[0]);
+if(m){var d=parseInt(m[1]),mo=m[2]==="oct"?9:10;
+if(mo===mm&&d===dd){todayId=n2;todayWk=wi}}})});
+
+var wkStart=0,wkEnd=0,wkDone=0,wkTotal=0;
+for(var wi2=0;wi2<D.length;wi2++){
+var days=D[wi2].slice(1);var s=0;for(var w2=0;w2<wi2;w2++)s+=D[w2].length-1;
+if(wi2===todayWk){wkStart=s;wkEnd=s+days.length;
+for(var j=wkStart+1;j<=wkEnd;j++){wkTotal+=3;if(store["r"+j])wkDone++;if(store["a"+j+"_0"])wkDone++;if(store["a"+j+"_1"])wkDone++}
+break}}
+var wkPct=wkTotal?Math.round(100*wkDone/wkTotal):0;
+document.getElementById("dashWkLbl").textContent="Semaine "+(todayWk+1);
+document.getElementById("dashBar1").style.width=wkPct+"%";
+document.getElementById("dashCnt1").textContent=wkDone+"/"+wkTotal;
+
+var dayDone=0,dayTotal=0,dayItems=[];
+if(todayId){dayTotal=3;
+var rd=!!store["r"+todayId];if(rd)dayDone++;
+dayItems.push({ok:rd,t:"Ressource du jour"});
+var a0=!!store["a"+todayId+"_0"];if(a0)dayDone++;
+dayItems.push({ok:a0,t:"Action 1"});
+var a1=!!store["a"+todayId+"_1"];if(a1)dayDone++;
+dayItems.push({ok:a1,t:"Action 2"});
+}
+var dayPct=dayTotal?Math.round(100*dayDone/dayTotal):0;
+document.getElementById("dashBar2").style.width=dayPct+"%";
+document.getElementById("dashCnt2").textContent=dayDone+"/"+dayTotal;
+var dtLabel=todayId?("Jour "+todayId):"Aujourd'hui";
+document.getElementById("dashDayLbl").textContent=dtLabel;
+
+var dtDiv=document.getElementById("dashToday");dtDiv.innerHTML="";
+if(dayItems.length){
+dtDiv.appendChild(el("div","dash-today-title",dtLabel+" — checklist"));
+dayItems.forEach(function(it){
+var row=el("div","dash-today-item"+(it.ok?" ok":""));
+row.appendChild(el("span","dot"));
+row.appendChild(document.createTextNode((it.ok?"✓ ":"○ ")+it.t));
+dtDiv.appendChild(row)})}
+
+var msg=DASH_MSGS[0];
+for(var mi=DASH_MSGS.length-1;mi>=0;mi--){if(pct>=DASH_MSGS[mi][0]){msg=DASH_MSGS[mi];break}}
+document.getElementById("dashMsg").textContent=msg[1];
+document.getElementById("dashSub").textContent=msg[2];
+
+document.querySelectorAll(".wk-card").forEach(function(wk){if(wk._updWeek)wk._updWeek()})
+}
 function upd(){var a=rBoxes.filter(function(x){return x.checked}).length,b=aBoxes.filter(function(x){return x.checked}).length;
 document.getElementById("cnt1").textContent=a+" / "+rBoxes.length;document.getElementById("bar1").style.width=(100*a/rBoxes.length)+"%";
 document.getElementById("cnt2").textContent=b+" / "+aBoxes.length;document.getElementById("bar2").style.width=(100*b/aBoxes.length)+"%";
-renderResults()}
+updDash();renderResults()}
 render();
 // export des notes
 document.getElementById("exb").onclick=function(){var L=[],g=function(x){return String(store[x]===undefined?"":store[x]).trim()};
