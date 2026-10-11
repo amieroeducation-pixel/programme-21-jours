@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Programme 21 jours</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="21 Jours">
+<meta name="theme-color" content="#1c6b57" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101a17" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<link rel="icon" href="icon-192.svg" type="image/svg+xml">
+<style>
+:root{--bg:#f6f8f7;--fg:#16231f;--mut:#566761;--card:#fff;--line:#d6e0dc;--acc:#1c6b57;--accbg:#e2f1ec;--pro:#2b5d9b;--perso:#9a4a6b;--mix:#7a5a12;--warn:#fff4dc;--warnfg:#6b4a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a17;--fg:#e5efeb;--mut:#9db3ab;--card:#17251f;--line:#2b3f37;--acc:#5fc3a5;--accbg:#173229;--pro:#8db8f0;--perso:#e59ab8;--mix:#e3c46f;--warn:#3a2f10;--warnfg:#f0d9a0}}
+:root[data-theme="dark"]{--bg:#101a17;--fg:#e5efeb;--mut:#9db3ab;--card:#17251f;--line:#2b3f37;--acc:#5fc3a5;--accbg:#173229;--pro:#8db8f0;--perso:#e59ab8;--mix:#e3c46f;--warn:#3a2f10;--warnfg:#f0d9a0}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:24px 16px 56px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+h1{font-size:clamp(1.7rem,5vw,2.3rem)}
+h2{font-size:1.25rem;margin:32px 0 10px}
+h3{font-size:1.05rem;margin:0 0 6px}
+.sub{color:var(--mut);margin:8px 0 16px;max-width:64ch}
+.warn{background:var(--warn);color:var(--warnfg);border-radius:10px;padding:12px 14px;font-size:.93rem;margin-bottom:16px}
+.warn a{color:inherit}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.box ul,.box ol{margin:4px 0 8px;padding-left:20px}
+.box li{margin:2px 0}
+.mut{color:var(--mut);font-size:.9rem}
+.prog{display:flex;align-items:center;gap:12px;margin:8px 0}
+.prog span.l{min-width:92px;font-size:.9rem;color:var(--mut)}
+.bar{flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--acc)}
+.day{display:grid;grid-template-columns:auto 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.day.prio{border-color:var(--acc);border-width:2px}
+.day>input{width:20px;height:20px;margin-top:4px;accent-color:var(--acc)}
+.day.done>div>.main{opacity:.6}
+.top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.date{font-weight:600}
+.th{font-weight:600}
+.th.pro{color:var(--pro)}.th.perso{color:var(--perso)}.th.mix{color:var(--mix)}
+.cr{color:var(--mut);font-size:.93rem}
+.vid{margin:4px 0}
+.vid a{color:var(--acc);font-weight:600}
+.tag{display:inline-block;font-size:.8rem;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mut);margin-left:6px}
+.tag.ok{background:var(--accbg);color:var(--acc);border-color:transparent}
+.ex{font-size:.9rem;color:var(--mut)}
+.ex a,.box a{color:var(--acc)}
+.acts{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.act{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:.95rem}
+.act input{width:18px;height:18px;margin-top:3px;flex:none;accent-color:var(--acc)}
+.act.done span.t{color:var(--mut);text-decoration:line-through}
+.act b{color:var(--fg)}
+.rt{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;font-size:.88rem;color:var(--mut)}
+.rt label{display:flex;gap:6px;align-items:center}
+.rt input{accent-color:var(--acc)}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600}
+.inputs{display:flex;flex-wrap:wrap;gap:10px 18px;margin:8px 0}
+.inputs label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mut);gap:2px}
+.inputs input{width:110px;padding:8px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+textarea{display:block;width:100%;font:inherit;font-size:16px;padding:8px 10px;margin:6px 0 12px;min-height:64px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);resize:vertical}
+.qs>li{margin-bottom:6px}
+.trk{margin:12px 0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.trk p{margin:2px 0 8px}
+.trk .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.trk input,.trk select{flex:1 1 130px;min-width:0;padding:8px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg)}
+.trk input.wide{flex:1 1 100%}
+details.nt{margin:0 0 6px 26px;padding:4px 10px;font-size:.9rem}
+details.nt summary{font-weight:400;color:var(--acc)}
+.rt input[type=number]{width:72px;padding:4px 6px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.inputs.wide label{flex:1 1 220px}.inputs.wide input{width:100%}
+.btn{font:inherit;padding:8px 14px;border:1px solid var(--acc);background:var(--accbg);color:var(--fg);border-radius:8px;cursor:pointer}
+button:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:12px;-webkit-overflow-scrolling:touch}
+.tw table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:560px}
+.tw th,.tw td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center}
+.tw th:first-child,.tw td:first-child{text-align:left;white-space:nowrap}
+.tw tr.tot td{font-weight:600;background:var(--accbg)}
+.rt label,.act,.blk label{min-height:32px}
+.rt input[type=checkbox]{width:20px;height:20px}
+</style>
+</head>
+<body>
+<main>
+<h1>Programme de 21 jours et plan d'actions, du 12 octobre au 1er novembre</h1>
+<p class="mut" id="sync" role="status">Enregistrement : connexion à la base en cours...</p>
+<p class="sub">Chaque jour : une ressource (le podcast Vendue de Laetitia Fall quand son thème colle mieux, sinon une vidéo), 2 actions importantes tirées de votre grille mandala, et des routines quotidiennes à part. Cochez au fur et à mesure.</p>
+
+<div class="warn"><b>À vérifier avant d'appeler des particuliers.</b> Depuis le 11 août 2026, le démarchage téléphonique de particuliers exige en principe leur consentement préalable explicite. D'après la page de la DEETS de La Réunion, mise à jour le 5 octobre 2026 : exceptions pour un contrat en cours et pour un contact dans les 5 jours ouvrables après une demande explicite du particulier ; appels du lundi au vendredi de 10h à 13h et de 14h à 20h ; au plus 4 appels par mois à une même personne ; preuve du consentement conservée 3 ans ; amendes pouvant atteindre 75 000 € par appel pour une personne physique. Cette page ne traite ni du démarchage entre professionnels ni des règles propres à la banque et à la finance. Je ne suis pas juriste : faites valider votre façon de prospecter, y compris vers votre cercle chaud, par votre conformité. <a href="https://reunion.deets.gouv.fr/Demarchage-telephonique-a-partir-du-11-aout-2026-le-consentement-devient-la" target="_blank" rel="noopener">Page de la DEETS</a> <b>Horaires :</b> selon <a href="https://www.info.gouv.fr/actualite/un-nouvel-encadrement-du-demarchage-telephonique" target="_blank" rel="noopener">info.gouv.fr</a>, le démarchage téléphonique est autorisé du lundi au vendredi de 10h à 13h et de 14h à 20h, et interdit le week-end et les jours fériés. Le créneau après 18h00 reste donc possible jusqu'à 20h00, en semaine seulement.</div>
+
+<h2>Routines de chaque jour, non comptées dans les 2 actions</h2>
+<div class="box">
+<h3>Mes chiffres de départ</h3>
+<p class="mut">À remplir le lundi 12, enregistré dans ce navigateur. Les objectifs de prospection se fixent à partir de ces chiffres.</p>
+<div class="inputs">
+<label>RDV pris la semaine dernière<input type="number" min="0" id="n1"></label>
+<label>Objectif RDV par semaine<input type="number" min="0" id="n2"></label>
+<label>Contacts interpro par jour<input type="number" min="0" id="n3" value="3"></label>
+</div>
+</div>
+<div class="box">
+<h3>1. Contact interpro, 3 par jour (jours ouvrés)</h3>
+<p><b>Objectif :</b> 3 contacts par jour, soit 45 sur les 15 jours ouvrés du 12 au 30 octobre. Répartition proposée, à ajuster : 1 nouvel expert-comptable ou fiscaliste et 2 contacts existants à entretenir.</p>
+<p><b>Indicateurs :</b> activité, nombre de contacts par jour et de nouveaux contacts par semaine ; résultat, rendez-vous et recommandations qui viennent de l'interpro (à compter en valeurs).</p>
+<p><b>Questions à répondre :</b></p>
+<ul><li>Qui sont mes interpro actuels, et quand ai-je parlé à chacun pour la dernière fois ?</li><li>Quel message court et utile envoyer à un nouvel expert-comptable ou fiscaliste ?</li><li>Qu'est-ce que je peux leur apporter en premier ?</li><li>Où je note chaque échange pour le suivre ?</li></ul>
+<p class="mut">Pour la logique partenariat : <a href="https://www.vendue.fr/podcast/augmenter-vos-taux-de-closing-avec-les-partenariats" target="_blank" rel="noopener">podcast Vendue n°88, Maxime Imbert, 55 min</a> (page lue).</p>
+</div>
+<div class="box">
+<h3>2. Prospection quotidienne pour augmenter les prises de rendez-vous, dont un créneau après 18h00 (jours ouvrés)</h3>
+<p><b>Créneau fixe :</b> prospection après 18h00 chaque jour ouvré, par exemple de 18h00 à 19h00 et jamais après 20h00, en plus de la prospection de la journée. Chaque jour, notez le nombre d'appels après 18h00 et les rendez-vous pris.</p>
+<p><b>Objectif :</b> à fixer à partir de vos chiffres de départ ci-dessus. Tant que les volumes sont petits, comptez en valeurs brutes plutôt qu'en pourcentages.</p>
+<p><b>Indicateurs :</b> activité, appels ou messages par jour ; conversion, contacts qui deviennent un rendez-vous ; résultat, rendez-vous pris par semaine (semaine du lundi au dimanche).</p>
+<p><b>Questions à répondre :</b></p>
+<ul><li>Combien de rendez-vous je prends par semaine aujourd'hui ?</li><li>Combien de tentatives me faut-il pour obtenir un rendez-vous ?</li><li>À quels créneaux fixes je prospecte, et avec quelle liste ?</li><li>Que dit la règle de consentement pour cette liste ?</li></ul>
+<p class="mut"><a href="https://www.vendue.fr/podcast/cold-calling-les-meilleurs-conseils-pour-booster-vos-ventes" target="_blank" rel="noopener">Podcast Vendue n°56 Cold calling, Enzo Colucci</a> (page lue, durée non affichée).</p>
+</div>
+<div class="box">
+<h3>3. Réécouter « Comment se faire des amis »</h3>
+<p><b>Objectif :</b> l'écouter en semaine 1, par exemple pendant un trajet, puis noter 3 idées à appliquer à l'interpro et au cercle chaud, et en appliquer 1.</p>
+<p>Lien : <a href="https://podcloud.fr/podcast/resume-developpement-personnel/episode/comment-se-faire-des-amis-et-influencer-les-autres-dale-carnegie-resume-livre-podcast-developpement-personnel" target="_blank" rel="noopener">« Comment se faire des amis et influencer les autres », résumé du livre de Dale Carnegie, podcast Résumé Développement Personnel, 18 min</a> (page lue). Autres versions trouvées : <a href="https://open.spotify.com/episode/52IWKHsvAytzqDadXWWBX3" target="_blank" rel="noopener">Spotify</a>, <a href="https://podcasts.apple.com/cd/podcast/comment-se-faire-des-amis-et-influencer-les-autres/id1818793678?i=1000711641651" target="_blank" rel="noopener">Apple Podcasts</a>, <a href="https://m.youtube.com/watch?v=_GQ7lvQ-frQ" target="_blank" rel="noopener">YouTube</a> (non ouvertes). Je ne sais pas laquelle vous aviez écoutée.</p>
+<label class="mut"><input type="checkbox" id="amis"> Réécouté</label>
+</div>
+
+<div class="box">
+<h3>4. Travailler ma faiblesse n°1, 10 minutes par jour (du 19 octobre au 1er novembre)</h3>
+<p><b>Objectif :</b> faire une séance de 10 minutes par jour sur la faiblesse classée n°1, soit 14 séances. Le classement se fait dans l'action 9 (les 13 et 15 octobre).</p>
+<p class="mut">Mes 3 faiblesses prioritaires, une fois classées (enregistré dans ce navigateur) :</p>
+<div class="inputs wide">
+<label>Faiblesse n°1<input type="text" id="wk1"></label>
+<label>Faiblesse n°2<input type="text" id="wk2"></label>
+<label>Faiblesse n°3<input type="text" id="wk3"></label>
+</div>
+</div>
+
+<h2>Les 9 actions : objectif, indicateurs, questions, étapes</h2>
+<p class="sub">Ouvrez une action et écrivez sous chaque paragraphe : tout s'enregistre automatiquement dans ce navigateur. Les notes d'une étape sont aussi accessibles depuis le jour prévu. Pour garder une copie ailleurs, utilisez le bouton ci-dessous.</p>
+<p><button class="btn" id="exb" type="button">Copier toutes mes notes</button> <span class="mut" id="exm"></span></p>
+<textarea id="exo" hidden readonly aria-label="Export de mes notes"></textarea>
+<div id="acts"></div>
+
+<h2>Programme jour par jour</h2>
+<div class="prog"><span class="l">Ressources</span><div class="bar"><i id="bar1"></i></div><strong id="cnt1">0 / 21</strong></div>
+<div class="prog"><span class="l">Actions</span><div class="bar"><i id="bar2"></i></div><strong id="cnt2">0 / 42</strong></div>
+<div id="out"></div>
+
+<h2>Tableau de résultats</h2>
+<p class="mut">Mis à jour en direct. Les mêmes lignes sont enregistrées jour par jour dans la base, avec vos notes, pour que nous puissions analyser vos actions ensemble.</p>
+<div id="rt_tbl"></div>
+
+<h2>Ressources en réserve, non programmées</h2>
+<ul id="res"></ul>
+</main>
+<script>
+function W(v){return "https://www.youtube.com/watch?v="+v}
+var PV="https://www.vendue.fr/podcast/";
+var I={
+p14:["P","n°14 Les 5 qualités des meilleurs commerciaux",PV+"les-5-qualit%C3%A9s-de-ceux-qui-r%C3%A9ussissent-dans-la-vente","Podcast Vendue, Laetitia Fall",9,"bonne",0,0,"Confiance, écoute, capacité à définir les prochaines étapes, persévérance."],
+p90:["P","n°90 La méthode de vente pour rendre votre solution incontournable",PV+"la-m%C3%A9thode-de-vente-pour-rendre-votre-solution-incontournable","Podcast Vendue, Sean Haskins (Moka.care)",47,"bonne",0,0,"Creuser jusqu'au vrai problème du prospect."],
+p63:["P","n°63 Augmenter votre taux de closing avec la méthode SPICED",PV+"augmenter-votre-taux-de-closing-avec-la-m%C3%A9thode-spiced","Podcast Vendue, Laurent Cebarec (Winning by Design)",null,"bonne",0,0,"SPICED : les questions qui révèlent les vrais besoins, qualifier ou disqualifier, gérer les deals à plusieurs décideurs."],
+pMF:["P","Phase de découverte : questions pour booster vos ventes","https://creators.spotify.com/pod/profile/fall34/episodes/Phase-de-dcouverte--questions-pour-booster-vos-ventes-----Mylne-Fohanno--co-fondatrice-de-Salestips-e2bt1l3","Podcast Vendue, Mylène Fohanno (Salestips)",null,"bonne, d'après le titre",0,0,"Épisode hébergé sur Spotify, que je n'ai pas pu ouvrir."],
+p5:["P","n°5 Traiter les objections","https://anchor.fm/fall34/episodes/5---Traiter-les-objections-e1ei2mq","Podcast Vendue, Laetitia Fall",null,"bonne, d'après la description de Laetitia Fall",0,0,"Différence entre objection et refus, objections courantes, comment les surmonter. Épisode hébergé sur Anchor, que je n'ai pas pu ouvrir."],
+p70:["P","n°70 Le mindset du Top 1 % des meilleurs commerciaux",PV+"le-mindset-du-top-1-des-meilleurs-commerciaux","Podcast Vendue, Béranger Stark Morel (Trustpilot)",46,"partielle",0,0,"Confiance avec les prospects, feedback, baisses de motivation."],
+p85:["P","n°85 Prospecter, closer, progresser : le guide du sales full cycle",PV+"prospecter-closer-progresser-le-guide-du-sales-full-cycle","Podcast Vendue, Mathurin Le Berre (Lyf)",null,"partielle",0,0,"Utiliser le vocabulaire interne des prospects, améliorer son closing en revoyant ses appels et ses notes."],
+p26:["P","n°26 Convertir après le premier rendez-vous commercial",PV+"convertir-apres-le-premier-rendez-vous-commercial/","Podcast Vendue",null,"partielle",0,0,"Fixer des étapes concrètes avec le prospect en fin de rendez-vous."],
+p35:["P","n°35 Comment gérer les clients insatisfaits ?",PV+"comment-g%C3%A9rer-les-clients-insatisfaits","Podcast Vendue, Laetitia Fall",null,"partielle",0,0,"Écouter, s'excuser, proposer une solution, assurer le suivi."],
+p8:["P","n°8 Développer sa confiance pour vendre plus",PV+"d%C3%A9velopper-sa-confiance-pour-vendre-plus","Podcast Vendue, Laetitia Fall",null,"partielle",0,0,"La confiance en soi dans la vente : rendez-vous délicats, interlocuteurs peu coopératifs, objections."],
+G311:["V","Parlez pour qu'on vous écoute ! Améliorez votre communication",W("G311xmfvduk"),"Laetitia Valstar ?",null,"partielle",0,0,""],
+qQ16:["V","#39 L'art de répondre aux questions difficiles",W("qQ16mZlcIgc"),"Nicolas Mel ?",null,"bonne",0,0,""],
+cOyc:["V","David Lefrançois - Le Système de Croyances",W("cOycHbFvcas"),"David Lefrançois",null,"bonne",1,0,""],
+eM8Q:["V","Comment avoir une bonne image de soi et avoir confiance - David Lefrançois | Ikigai France",W("eM8QI-Rvt-U"),"David Lefrançois",null,"bonne",1,0,""],
+V6YY:["V","Parlez en toute confiance : Meilleurs exercices d'entraînement vocal pour parler en public",W("6YyLc-CzPQo"),"Laetitia Valstar ?",null,"partielle",0,0,""],
+dbN6:["V","Atteindre le Top 1% en vente B2B avec Laetitia Fall",W("dbN6ngMtLX8"),"Laetitia Fall",null,"partielle",1,0,""],
+L5SV:["V","L'amour, ce moteur fondamental de la vie - David Lefrançois",W("5SVuwMlRMfY"),"David Lefrançois",null,"partielle",1,0,""],
+emAR:["V","Overcome Stage Fright and Learn How to talk like a leader",W("emARFQBggbk"),"Laetitia Valstar ?",null,"partielle",0,1,""],
+wL_g:["V","Pourquoi tu galères avec le coldcall ? Avec Laetitia Fall - Coldcast Saison 2 #24",W("wL_gCtfiLbE"),"Laetitia Fall",null,"partielle",1,0,""],
+L9FF:["V","VOUS ÊTES PERFECTIONNISTE ?",W("9FFpy2EBA7k"),"David Lefrançois ?",null,"partielle",0,0,""],
+BWFP:["V","Be in Command of Your VOICE and Speak Like a Leader!",W("BWFPP2IkV_0"),"Laetitia Valstar ?",null,"faible",0,1,""]
+};
+var RD={
+r3:["Laetitia Fall : 3 questions que vous ne devriez pas poser (article LinkedIn)","https://fr.linkedin.com/pulse/3-questions-que-vous-ne-devriez-pas-poser-laetitia-fall"],
+r14:["Newsletter Vendue : Sécuriser les prochaines étapes après un rendez-vous","https://vendue.substack.com/p/securiser-les-prochaines-etapes-apres"],
+r15:["Nicolas Mel : Comment avoir de la répartie ? (blog Silence)","https://www.coachingprisedeparole.fr/comment-avoir-de-la-repartie/"],
+r16:["David Lefrançois : Comprendre et utiliser notre système de croyance (article repris sur Minutefacile)","https://www.minutefacile.com/vie-pratique/travail/11434-comprendre-et-utiliser-notre-systeme-de-croyance/"],
+r17:["David Lefrançois et la confiance en soi, estime de soi en 8 étapes (page de synthèse)","http://la-confiance-en-soi.fr/confiance-en-soi/la-confiance-en-soi-david-lefrancois/"],
+r18:["Nicolas Mel : Surmonter sa timidité, la méthode qui m'a libéré (blog Silence)","https://www.coachingprisedeparole.fr/surmonter-sa-timidite-la-methode-qui-ma-libere/"],
+r22:["Nicolas Mel : Prise de parole en réunion, comment s'imposer sans forcer (blog Silence)","https://www.coachingprisedeparole.fr/prise-de-parole-en-reunion-comment-simposer-sans-forcer/"]
+};
+var RX={
+pires:["Enzo Colucci : Les 5 pires phrases en prospection","https://enzocolucci.substack.com/p/les-5-pires-phrases-en-prospection"],
+aqpr:["Enzo Colucci : la méthode AQPR pour répondre aux objections au téléphone","https://www.enzocolucci.com/cold-calling"],
+obj:["Enzo Colucci : réponses aux objections commerciales, inventaire des objections","https://www.enzocolucci.com/blog/reponses-objections-commerciales"],
+p56:["Podcast Vendue n°56 Cold calling, Enzo Colucci","https://www.vendue.fr/podcast/cold-calling-les-meilleurs-conseils-pour-booster-vos-ventes"],
+p88:["Podcast Vendue n°88 Les partenariats, Maxime Imbert, 55 min",PV+"augmenter-vos-taux-de-closing-avec-les-partenariats"],
+p89:["Podcast Vendue n°89 Objectif 5M€ dépassé, Yann Guilleux (Lemlist), 60 min",PV+"objectif-5m%E2%82%AC-d%C3%A9pass%C3%A9-les-strat%C3%A9gies-de-vente-qui-ont-fait-la-diff%C3%A9rence"],
+p92:["Podcast Vendue n°92 Road to 3M€ ARR, Grégoire Luel (lemlist), 54 min, titre seulement",PV+"road-to-3m%E2%82%AC-arr---part-1-passer-d-account-executive-%C3%A0-sales-manager"]
+};
+var ACT={
+A1:{n:"Demander la recommandation de mes plus gros clients",short:"Reco des plus gros clients",trk:10,
+obj:"Obtenir des recommandations de mes plus gros clients en les appelant. Objectif proposé : 10 clients appelés en 3 semaines, à ajuster.",
+ind:["Activité : nombre de clients appelés pour demander la recommandation.","Résultat : recommandations reçues et rendez-vous qui en découlent, à compter en valeurs tant que les volumes sont petits."],
+q:["Qui sont mes 20 plus gros clients (nom, prénom), selon quel critère (montant confié, ancienneté) ?","Pour chacun, qu'est-ce qui l'a satisfait et que je peux citer ?","À qui pourrait-il me recommander (famille, amis, collègues, pairs) ?","Quel moment et quel canal : en rendez-vous, au téléphone, par message ?","Que dire exactement, et comment remercier et assurer le suivi ?"],
+steps:[
+{s:"répertorier les gros clients",t:"Répertorier mes plus gros clients : tableau avec nom, prénom, montant confié, ancienneté, dernier contact et niveau de relation."},
+{s:"choisir 5 clients et ce qu'ils apprécient",t:"Choisir les 5 premiers à appeler, les inscrire dans le tableau de suivi et noter pour chacun ce qu'il a apprécié chez moi."},
+{s:"rédiger ma demande et mon script d'appel",t:"Rédiger ma demande de recommandation (2 à 3 phrases), mon script d'appel et mon plan de suivi."},
+{s:"appeler 2 clients",t:"Appeler 2 clients pour leur demander la recommandation et noter leur réponse dans le tableau."},
+{s:"appeler 3 autres clients",t:"Appeler 3 autres clients et relancer les 2 premiers si besoin."},
+{s:"bilan des recos",t:"Faire le bilan : appels faits, recommandations reçues, rendez-vous obtenus, remerciements envoyés."}]},
+A2:{n:"Cibler la recommandation des gros tontiniers",short:"Reco des gros tontiniers",trk:8,
+obj:"Obtenir des recommandations liées aux gros tontiniers, de leur part ou vers des personnes au profil comparable, en les appelant. Objectif proposé : 5 gros tontiniers appelés. À confirmer : j'ai compris l'action ainsi, dites-moi si vous visez autre chose.",
+ind:["Activité : gros tontiniers identifiés (nom, prénom), puis appelés.","Résultat : recommandations reçues et rendez-vous obtenus."],
+q:["Que veut dire « gros tontinier » pour moi : à partir de quel montant ?","Combien en ai-je dans mon portefeuille, et quels sont leurs nom et prénom ?","Quels sont leurs cercles (famille, amis, pairs) et quel profil de personne rechercher ?","Quel argument propre à ce profil donne envie de me recommander ?","Que répondre s'il hésite ou dit ne connaître personne ?"],
+steps:[
+{s:"définir un gros tontinier",t:"Définir par écrit ce qu'est un gros tontinier, avec un critère chiffré."},
+{s:"lister nom et prénom",t:"Lister mes gros tontiniers avec nom, prénom, montant, ancienneté et relation, dans le tableau de suivi."},
+{s:"cercles et profil à cibler",t:"Pour les 5 premiers, noter leurs cercles et le profil de personne à qui ils pourraient me recommander."},
+{s:"préparer l'appel",t:"Préparer l'appel : script de 3 à 4 phrases pour demander la recommandation et réponses aux 2 hésitations les plus probables."},
+{s:"appeler 2 gros tontiniers",t:"Appeler les 2 premiers gros tontiniers pour demander la recommandation et noter la réponse."},
+{s:"appeler 3 autres et bilan",t:"Appeler 3 autres gros tontiniers, relancer ceux qui n'ont pas répondu et faire le bilan."}]},
+A3:{n:"Trouver des phrases qui donnent envie (cercle chaud)",short:"Phrases qui donnent envie",
+obj:"Avoir 3 phrases qui donnent envie d'en savoir plus sur mon activité et les utiliser 10 fois auprès de mon cercle chaud.",
+ind:["Activité : nombre d'utilisations, objectif 10.","Résultat : réactions positives sur ces 10 utilisations, par exemple 6 sur 10."],
+q:["Quel problème est-ce que je règle, pour quelle personne ?","Comment mon meilleur client le dirait-il avec ses mots ?","Quelle phrase donne envie de poser une question plutôt que de répondre « d'accord » ?","Laquelle est-ce que je dis le plus naturellement ?"],
+steps:[
+{s:"mes phrases actuelles",t:"Noter mes 5 façons actuelles de présenter mon activité et repérer celles qui ne donnent pas envie.",r:["pires"]},
+{s:"écrire 5 phrases",t:"Rédiger 5 phrases centrées sur ce que le client obtient, pas sur mon produit."},
+{s:"tester à voix haute, garder 3",t:"Dire les 5 phrases à voix haute, avec enregistrement, en garder 3 et choisir ma phrase de référence."},
+{s:"utiliser avec 5 personnes",t:"Utiliser les phrases avec 5 personnes du cercle chaud, noter leurs réactions et viser 10 utilisations au total."}]},
+A4:{n:"Parler à plus de personnes de mon activité pro (cercle chaud)",short:"Parler à plus de personnes",
+obj:"Parler de mon activité à 10 personnes de mon cercle chaud en 3 semaines.",
+ind:["Activité : personnes contactées, objectif 10.","Résultat : conversations qui débouchent sur un rendez-vous, une recommandation ou une présentation."],
+q:["Qui compose mon cercle chaud (famille, amis, anciens collègues, clients) ?","Qui est le plus susceptible de connaître des personnes concernées par mon activité ?","Quelle phrase je dis en premier ?","Comment éviter que l'échange paraisse lourd ou intéressé ?"],
+steps:[
+{s:"lister 50 personnes",t:"Lister 50 personnes de mon cercle chaud avec leur catégorie."},
+{s:"classer A, B, C",t:"Les classer en A, B, C selon la proximité et le lien avec mon activité."},
+{s:"contacter 5 personnes",t:"Contacter 5 personnes de la liste A avec mes phrases."},
+{s:"5 autres et bilan",t:"Contacter 5 autres personnes, noter les suites, faire le bilan et fixer un rythme pour la suite."}]},
+A5:{n:"Recueillir les conseils des Top Sales",short:"Conseils des Top Sales",
+obj:"Obtenir 5 conseils actionnables pour améliorer mon interpro et parler aux bonnes personnes.",
+ind:["Activité : conseils recueillis et conversations menées avec des top sales, objectif 2.","Résultat : conseils testés, objectif 1 par semaine."],
+q:["Que veux-je apprendre précisément : l'interpro, trouver les bonnes personnes, ouvrir la discussion ?","Qui sont les top sales à qui je peux poser mes questions ?","Que font-ils différemment sur l'interpro ?","Quel conseil puis-je tester dès demain ?"],
+steps:[
+{s:"écrire 5 questions",t:"Écrire 5 questions à poser aux top sales sur l'interpro et sur le fait de parler aux bonnes personnes."},
+{s:"écouter 2 interviews",t:"Écouter 2 interviews de top sales et noter leurs conseils.",r:["p88","p92"]},
+{s:"message à 2 top sales",t:"Écrire un message pour demander 15 minutes à 2 top sales ou pairs."},
+{s:"synthèse et test",t:"Synthétiser les conseils en 5 règles, choisir un conseil à tester, le planifier et définir comment le mesurer."}]},
+A6:{n:"Comprendre comment se font les grosses affaires",short:"Comprendre les grosses affaires",
+obj:"Comprendre le parcours d'une grosse affaire et choisir 3 leviers pour y accéder.",
+ind:["Activité : parcours cartographié et enseignements notés.","Résultat : 3 leviers choisis et 1 action planifiée par levier."],
+q:["Qu'est-ce qu'une grosse affaire pour moi, en montant ?","D'où venaient les 3 dernières que j'ai vues ou signées ?","Qui décide, combien de rendez-vous, sur quelle durée ?","Qui me donne accès à ces affaires (prescripteur, client, cercle) ?"],
+steps:[
+{s:"définir une grosse affaire, 3 dernières",t:"Définir ce que j'appelle une grosse affaire et décrire les 3 dernières : origine, durée, interlocuteurs."},
+{s:"5 enseignements du podcast SPICED",t:"Après le podcast SPICED du jour, noter 5 enseignements sur la vente complexe."},
+{s:"parcours et 3 conditions d'accès",t:"Cartographier le parcours type d'une grosse affaire (étapes, décideurs, apporteurs) et identifier 3 conditions pour y accéder.",r:["p89","p92"]},
+{s:"1 action par condition",t:"Choisir 1 action concrète par condition et la planifier."}]},
+A7:{n:"Piloter l'activité selon les prochaines signatures",short:"Piloter selon les signatures",
+obj:"Piloter chaque semaine à partir des signatures prévues, du nombre de propositions faites et des relances.",
+ind:["Activité : propositions faites et relances effectuées.","Conversion : propositions qui deviennent des signatures, en valeurs brutes tant que les volumes sont petits.","Résultat : signatures et production, comparées à l'objectif au prorata du temps écoulé. N'alerter que si l'écart dure deux semaines de suite."],
+q:["Quelles signatures sont prévues dans les 4 prochaines semaines, et à quelle étape ?","Combien de propositions sont en attente, et depuis quand ?","Quelle règle de relance : après combien de jours, par quel canal ?","Quel jour fixe pour le point hebdomadaire (semaine du lundi au dimanche) ?","Quelles données ai-je déjà dans mon tableau de bord ?"],
+steps:[
+{s:"lister les signatures prévues",t:"Lister les signatures prévues des 4 prochaines semaines : nom, montant, date prévue, étape."},
+{s:"propositions en attente, règle de relance",t:"Compter les propositions en attente et fixer ma règle de relance."},
+{s:"choisir 4 chiffres",t:"Choisir 4 chiffres suivis chaque semaine : propositions faites, relances, signatures, écart avec l'objectif."},
+{s:"premier point hebdo",t:"Faire le premier point hebdomadaire de 15 minutes : décider des actions de la semaine et vérifier mon travail sur la faiblesse n°1."},
+{s:"prévu contre réalisé",t:"Comparer prévu et réalisé, ajuster les actions et fixer le rythme du point suivant."}]},
+A8:{n:"Lister les objections téléphoniques et travailler AQPR (action à part)",short:"Objections au téléphone et AQPR",
+obj:"Avoir la liste de mes objections téléphoniques et une réponse AQPR rédigée et rodée pour les 3 plus fréquentes. J'ai trouvé la méthode d'Enzo Colucci sous le nom AQPR : A Acceptation, Q Questions ouvertes, P Preuve sociale, R Re-proposition de deux créneaux. Si votre version a un C en plus, dites-le-moi.",
+ind:["Activité : 10 objections listées ou plus, 5 familles, 3 réponses rédigées, 5 appels avec la méthode.","Résultat : sur ces 5 appels, objections transformées en rendez-vous, par exemple 2 sur 5."],
+q:["Quelles objections est-ce que j'entends le plus souvent, avec les mots exacts du prospect ?","Lesquelles sont de vraies objections et lesquelles sont des refus ?","Quelle preuve sociale vraie puis-je citer, sans exagérer ?","Quels deux créneaux proposer en fin de réponse ?"],
+steps:[
+{s:"lister les objections",t:"Lister toutes les objections entendues récemment au téléphone, avec les mots exacts.",r:["obj"]},
+{s:"5 familles",t:"Les regrouper en 5 familles et les classer par fréquence."},
+{s:"apprendre AQPR",t:"Apprendre AQPR : Acceptation, Questions ouvertes, Preuve sociale, Re-proposition de deux créneaux.",r:["aqpr"]},
+{s:"3 réponses AQPR",t:"Écrire la réponse AQPR aux 3 objections les plus fréquentes."},
+{s:"s'entraîner à voix haute",t:"S'entraîner à voix haute, 3 fois chacune, avec enregistrement."},
+{s:"5 appels avec AQPR",t:"Utiliser AQPR sur 5 appels, noter objection, réponse et résultat, puis ajuster la liste.",r:["p56"]}]},
+A9:{n:"Classer mes faiblesses et travailler dessus",short:"Faiblesses : classer et travailler",wk:1,
+obj:"Lister mes faiblesses pro et perso, les classer, puis travailler la numéro 1 chaque jour pendant 10 minutes du 19 octobre au 1er novembre (14 séances).",
+ind:["Activité : 10 faiblesses listées ou plus ; séances de 10 minutes faites, objectif 14 (case « 10 min sur ma faiblesse n°1 » dans chaque jour).","Résultat : un indicateur observable sur la faiblesse n°1, par exemple le nombre de fois où je fais le bon geste sur 5 appels. Comparer la semaine 3 à la semaine 2 (semaine du lundi au dimanche)."],
+q:["Qu'est-ce qui me freine le plus dans mes rendez-vous, mes appels et mon organisation ?","Quels retours (clients, pairs, enregistrements d'appels) confirment chaque faiblesse ?","Laquelle a le plus d'impact sur mes rendez-vous et mes signatures ?","Laquelle puis-je faire progresser en 2 semaines ?","Quel exercice de 10 minutes je peux répéter chaque jour ?","Comment saurai-je que ça progresse : quel chiffre ou quel comportement observer ?"],
+steps:[
+{s:"lister mes faiblesses",t:"Lister 10 à 15 faiblesses sans filtrer, en m'appuyant sur mes 3 derniers rendez-vous et sur des enregistrements d'appels."},
+{s:"classer et choisir le top 3",t:"Noter chaque faiblesse de 1 à 3 en impact et de 1 à 3 en facilité à progresser, choisir le top 3 et noter les 3 dans la case « mes faiblesses » en haut de page."},
+{s:"plan de travail sur la n°1",t:"Définir pour la n°1 un exercice de 10 minutes par jour, un indicateur observable et une revue à chaque point hebdomadaire."}]}
+};
+var RES=[
+["Vidéo","ColdCast avec Laetitia Fall","https://m.youtube.com/watch?v=njI_vP7tHaY"],
+["Vidéo","Comment prospecter en 2025, avec Laetitia Fall",W("Wev1_P17eQs")],
+["Vidéo","3 clés pour des équipes performantes et épanouies en distanciel, Laetitia Fall",W("Eo0lgn23zjE")],
+["Vidéo","Préparer une prise de parole en public (Nicolas Mel ?)",W("SyxYyBI2bzQ")],
+["Vidéo","Prise de parole à Sciences Po, 3 clés (Nicolas Mel ?)",W("f6RKyGyxQGQ")],
+["Vidéo","Comment ne plus avoir peur de la prise de parole en public ? x Nicolas Mel",W("K_P1RA1eXAQ")],
+["Vidéo","Animer des conférences, Côme Girschig x Nicolas Mel",W("4Bb0cnVo1Jg")],
+["Vidéo","Animer des formations, Marine Dumoulin x Nicolas Mel",W("BpkOjcVZUKk")],
+["Vidéo","David Lefrançois : Comment vaincre la timidité",W("XI2LZGdKp1E")],
+["Vidéo","Overcome Stage Fright: Confident Public Speaking (Laetitia Valstar ?, anglais)",W("nKeOFPdL2HY")],
+["Podcast","n°24 Mes 3 conseils pour être un excellent vendeur, 13 min",PV+"mes-3-conseils-pour-%C3%AAtre-un-excellent-vendeur"],
+["Podcast","n°93 Vendre comme les meilleurs commerciaux, Julia Thor, 51 min",PV+"vendre-comme-les-meilleurs-commerciaux-%28les-comp%C3%A9tences-qui-font-la-diff%C3%A9rence%29"],
+["Podcast","n°91 La méthode pour closer un deal en un call, Thibault Lemaître, 50 min",PV+"la-m%C3%A9thode-pour-closer-un-deal-en-un-call-et-%C3%A9liminer-ses-concurrents"],
+["Podcast","n°11 10 stratégies pour gérer son stress quand on est commercial",PV+"10-strat%C3%A9gies-pour-g%C3%A9rer-son-stress-quand-on-est-commercial"],
+["Podcast","n°43 Le guide pour réussir et évoluer dans les métiers de la vente, Igor Pasternatzky, 43 min",PV+"le-guide-pour-r%C3%A9ussir-et-%C3%A9voluer-dans-les-m%C3%A9tiers-de-la-vente"]
+];
+// date, theme, cls, ressource, mini-exercice, lecture, [[action,etape],[action,etape]]
+var D=[
+["Semaine 1",
+["Lun 12 oct","Reformulation","pro","p14","Notez ce que dit Laetitia Fall sur l'écoute, puis reformulez à voix haute trois phrases d'un de vos derniers rendez-vous.",0,[["A7",1],["A8",1]]],
+["Mar 13 oct","Pains et objectifs","pro","p90","Notez les questions qui font émerger le vrai problème, puis l'objectif que le client y rattache.","r3",[["A6",1],["A9",1]]],
+["Mer 14 oct","Découverte avec SPICED (priorité)","pro","p63","Notez Situation, Pain, Impact, Critical Event et Decision, avec une question pour chacun adaptée à un client patrimonial.","r14",[["A6",2],["A1",1]]],
+["Jeu 15 oct","Réponse RCQ","pro","qQ16","Dites-moi ce que signifie RCQ pour que je cale les jeudis suivants. En attendant, notez la méthode donnée pour répondre à une question difficile.","r15",[["A8",2],["A9",2]]],
+["Ven 16 oct","Croyance en sa propre valeur","perso","cOyc","Écrivez une croyance qui touche à votre valeur dans votre métier.","r16",[["A2",1],["A4",1]]],
+["Sam 17 oct","Estime de soi","perso","eM8Q","Notez les étapes données, et laquelle vous travaillez en premier.","r17",[["A3",1],["A1",2]]],
+["Dim 18 oct","Pro et perso","mix","V6YY","Faites un des exercices de voix avant votre prochain rendez-vous client.","r18",[["A7",2],["A9",3]]]],
+["Semaine 2",
+["Lun 19 oct","Reformulation","pro","G311","Reformulez un besoin client en une phrase, puis faites-la valider.",0,[["A8",3],["A2",2]]],
+["Mar 20 oct","Pains et objectifs","pro","pMF","Rédigez trois questions de pain adaptées à un client patrimonial.",0,[["A3",2],["A4",2]]],
+["Mer 21 oct","Découverte avec SPICED","pro","dbN6","Repérez ce qui ressemble à SPICED dans ce que dit Laetitia Fall, et notez une question à reprendre.",0,[["A6",3],["A5",1]]],
+["Jeu 22 oct","Réponse RCQ","pro","p5","Notez la différence entre objection et refus, puis une réponse à une objection fréquente de vos prospects.","r22",[["A8",4],["A1",3]]],
+["Ven 23 oct","Croyance en sa propre valeur","perso","p70","Repérez une croyance sur votre valeur qui freine votre confiance face aux prospects.",0,[["A7",3],["A1",4]]],
+["Sam 24 oct","Estime de soi","perso","L5SV","Notez une idée sur l'amour de soi à appliquer cette semaine.",0,[["A4",3],["A3",3]]],
+["Dim 25 oct","Pro et perso","mix","emAR","Notez un conseil contre le trac à appliquer avant un rendez-vous client.",0,[["A5",2],["A2",3]]]],
+["Semaine 3",
+["Lun 26 oct","Reformulation","pro","p85","Rejouez un rendez-vous réel en reformulant avec les mots du prospect.",0,[["A7",4],["A8",5]]],
+["Mar 27 oct","Pains et objectifs","pro","wL_g","Notez ce que le prospect attend d'un premier échange, puis le pain que vous voulez faire émerger.",0,[["A2",4],["A5",3]]],
+["Mer 28 oct","Découverte avec SPICED","pro","p26","Écrivez la prochaine étape concrète que vous proposerez à votre prochain client, avec une date.",0,[["A4",4],["A1",5]]],
+["Jeu 29 oct","Réponse RCQ","pro","p35","Faites une réponse en quatre temps à un client mécontent : écouter, s'excuser, proposer une solution, assurer le suivi.",0,[["A8",6],["A2",5]]],
+["Ven 30 oct","Croyance en sa propre valeur","perso","L9FF","Repérez une exigence trop haute envers vous-même et reformulez-la en croyance ressource.",0,[["A6",4],["A3",4]]],
+["Sam 31 oct","Estime de soi","perso","p8","Notez une preuve concrète de votre valeur cette semaine.",0,[["A5",4],["A2",6]]],
+["Dim 1 nov","Pro et perso","mix","BWFP","Faites le bilan : quel thème a le plus bougé en trois semaines ?",0,[["A7",5],["A1",6]]]]
+];
+var store={};try{store=JSON.parse(localStorage.getItem("p21e")||"{}")}catch(e){}
+var DB=null,last={},dirty={},timer=null,busy=false,DR={},TA={},rBoxes=[],aBoxes=[];
+function setSync(t){var s=document.getElementById("sync");if(s)s.textContent=t}
+function hm(){var d=new Date();return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)}
+function save(){try{localStorage.setItem("p21e",JSON.stringify(store))}catch(e){}
+if(!DB)return;var c=false;for(var k in store){if(JSON.stringify(store[k])!==last[k]){dirty[k]=1;c=true}}
+if(c){setSync("Modifications en cours d'enregistrement...");clearTimeout(timer);timer=setTimeout(flush,1200)}}
+function pad(n){return (n<10?"0":"")+n}
+function numOf(k){var x=store[k];return (x===undefined||x==="")?null:Number(x)}
+function dayRow(id){var r=DR[id];if(!r)return null;var A=r[6].map(function(p,i){return {nom:p[0]+" étape "+p[1],fait:!!store["a"+id+"_"+i]}});
+return {jour:id,date:r[0],semaine:id<=7?1:(id<=14?2:3),theme:r[1],ressource:I[r[3]][1],ressource_faite:!!store["r"+id],action1:A[0].nom,action1_faite:A[0].fait,action2:A[1].nom,action2_faite:A[1].fait,actions_faites:(A[0].fait?1:0)+(A[1].fait?1:0),interpro:!!store["i"+id],prospection_jour:!!store["p"+id],prospection_18h:!!store["q"+id],appels_18h:numOf("ap"+id),rdv_pris:numOf("rv"+id),faiblesse_10min:!!store["w"+id],maj:new Date().toISOString()}}
+function dayOfKey(k){var m=/^(?:r|i|p|q|w|ap|rv)(\d+)$/.exec(k)||/^a(\d+)_\d$/.exec(k);return m?Number(m[1]):0}
+async function flush(){if(busy){timer=setTimeout(flush,1200);return}
+busy=true;var ks=Object.keys(dirty);dirty={};var days={},fail=false;
+for(var i=0;i<ks.length;i++){var k=ks[i],v=store[k];
+try{await DB.doc("entries/e_"+k).set({k:k,v:v===undefined?null:v,t:new Date().toISOString()});last[k]=JSON.stringify(store[k]);var d=dayOfKey(k);if(d)days[d]=1}
+catch(e){dirty[k]=1;fail=true}}
+for(var d2 in days){try{await DB.doc("jours/j"+pad(Number(d2))).set(dayRow(Number(d2)))}catch(e){fail=true}}
+busy=false;
+if(fail){setSync("Enregistrement incomplet, nouvel essai à la prochaine modification. Vos notes restent sur cet appareil.")}
+else setSync("Enregistré dans la base à "+hm()+".")}
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function tag(txt,ok){return el("span","tag"+(ok?" ok":""),txt)}
+function link(href,txt){var a=el("a","",txt);a.href=href;a.target="_blank";a.rel="noopener";return a}
+function chk(key,onch){var c=document.createElement("input");c.type="checkbox";c.checked=!!store[key];c.onchange=function(){store[key]=c.checked;save();if(onch)onch(c.checked);upd()};return c}
+function grow(t){t.style.height="auto";t.style.height=Math.max(64,t.scrollHeight+2)+"px"}
+function ta(key,ph){var t=document.createElement("textarea");t.placeholder=ph||"Écrire ici, enregistré automatiquement";t.setAttribute("aria-label",ph||"Mes notes");t.value=store[key]||"";
+(TA[key]=TA[key]||[]).push(t);
+t.oninput=function(){store[key]=t.value;save();TA[key].forEach(function(o){if(o!==t){o.value=t.value;grow(o)}});grow(t)};return t}
+function numIn(key,ph){var i=document.createElement("input");i.type="number";i.min="0";i.inputMode="numeric";i.placeholder=ph;i.setAttribute("aria-label",ph);i.value=store[key]!==undefined?store[key]:"";i.oninput=function(){store[key]=i.value;save();upd()};return i}
+var ST=["Statut","À appeler","Appelé, à rappeler","Recommandation obtenue","Rendez-vous obtenu","Refus"];
+function tracker(k,rows){var w=el("div","trk");
+var h=el("p","","Tableau de suivi des appels ("+(k==="A1"?"gros clients":"gros tontiniers")+")");h.style.fontWeight="600";w.appendChild(h);
+w.appendChild(el("p","mut","Une ligne par personne : prénom, nom, montant, date d'appel, statut, et à qui elle peut me recommander."));
+for(var r=0;r<rows;r++){(function(r){var row=el("div","row");
+[["Prénom","p"],["Nom","n"],["Montant confié","m"],["Appelé le","d"]].forEach(function(f){var i=document.createElement("input");i.type="text";i.placeholder=f[0];i.setAttribute("aria-label",f[0]+", ligne "+(r+1));var key="t_"+k+"_"+r+"_"+f[1];i.value=store[key]||"";i.oninput=function(){store[key]=i.value;save()};row.appendChild(i)});
+var s=document.createElement("select");s.setAttribute("aria-label","Statut, ligne "+(r+1));ST.forEach(function(o,j){var op=document.createElement("option");op.value=j?o:"";op.textContent=o;s.appendChild(op)});
+var sk="t_"+k+"_"+r+"_s";s.value=store[sk]||"";s.onchange=function(){store[sk]=s.value;save();upd()};row.appendChild(s);
+var wi=document.createElement("input");wi.type="text";wi.className="wide";wi.placeholder="Peut me recommander à qui ?";wi.setAttribute("aria-label","Peut me recommander à qui, ligne "+(r+1));var wk="t_"+k+"_"+r+"_w";wi.value=store[wk]||"";wi.oninput=function(){store[wk]=wi.value;save()};row.appendChild(wi);
+w.appendChild(row)})(r)}
+return w}
+function render(){
+TA={};rBoxes=[];aBoxes=[];DR={};
+var ac=document.getElementById("acts"),out=document.getElementById("out"),rl=document.getElementById("res");
+ac.innerHTML="";out.innerHTML="";rl.innerHTML="";
+var dayOf={};
+D.forEach(function(w){w.slice(1).forEach(function(r){r[6].forEach(function(p){dayOf[p[0]+"_"+p[1]]=r[0]})})});
+Object.keys(ACT).forEach(function(k){var a=ACT[k],d=el("details");d.appendChild(el("summary","",k.replace("A","")+". "+a.n));
+d.addEventListener("toggle",function(){d.querySelectorAll("textarea").forEach(grow)});
+var b=el("div");
+var p=el("p");p.appendChild(el("b","","Objectif : "));p.appendChild(document.createTextNode(a.obj));b.appendChild(p);
+b.appendChild(ta("n_"+k+"_obj","Mon objectif chiffré et ma date limite"));
+var t=el("p","","Indicateurs :");t.style.fontWeight="600";b.appendChild(t);
+var u=el("ul");a.ind.forEach(function(x){u.appendChild(el("li","",x))});b.appendChild(u);
+b.appendChild(ta("n_"+k+"_ind","Mes indicateurs : point de départ, cible, résultat réel"));
+t=el("p","","Questions à répondre :");t.style.fontWeight="600";b.appendChild(t);
+u=el("ul","qs");a.q.forEach(function(x,i){var li=el("li","",x);li.appendChild(ta("n_"+k+"_q"+i,"Ma réponse"));u.appendChild(li)});b.appendChild(u);
+if(a.trk)b.appendChild(tracker(k,a.trk));
+t=el("p","","Étapes et jour prévu :");t.style.fontWeight="600";b.appendChild(t);
+var o=el("ol","qs");a.steps.forEach(function(s,i){var li=el("li","",s.t+" ");li.appendChild(el("span","mut","("+dayOf[k+"_"+(i+1)]+")"));
+(s.r||[]).forEach(function(rk){li.appendChild(document.createTextNode(" "));li.appendChild(link(RX[rk][1],RX[rk][0]))});
+li.appendChild(ta("n_"+k+"_s"+(i+1),"Mes notes et le résultat de cette étape"));o.appendChild(li)});
+b.appendChild(o);d.appendChild(b);ac.appendChild(d)});
+var n=0;
+D.forEach(function(w){out.appendChild(el("h2","",w[0]));
+w.slice(1).forEach(function(r){var id=++n;DR[id]=r;var v=I[r[3]],isP=v[0]==="P",wk=/^(Sam|Dim)/.test(r[0])?0:1;
+var d=el("div","day"+(r[3]==="p63"?" prio":""));
+var c=chk("r"+id,function(ch){d.classList.toggle("done",ch)});rBoxes.push(c);
+if(c.checked)d.classList.add("done");
+var b=el("div"),m=el("div","main");
+var t=el("div","top");t.appendChild(el("span","date",r[0]));t.appendChild(el("span","th "+r[2],r[1]));t.appendChild(el("span","cr",v[3]));m.appendChild(t);
+var vd=el("div","vid");vd.appendChild(tag(isP?"Podcast":"Vidéo",1));vd.appendChild(document.createTextNode(" "));vd.appendChild(link(v[2],v[1]));
+if(v[4])vd.appendChild(tag(v[4]+" min",1));else if(isP)vd.appendChild(tag("durée non affichée",0));
+if(!isP)vd.appendChild(tag(v[6]?"nom dans le titre":"chaîne à vérifier",v[6]));
+vd.appendChild(tag("adéquation "+v[5],v[5]==="bonne"));if(v[7])vd.appendChild(tag("en anglais",0));
+m.appendChild(vd);
+if(v[8])m.appendChild(el("div","ex",v[8]));
+m.appendChild(el("div","ex","Pendant l'écoute : "+r[4]));
+if(r[5]&&RD[r[5]]){var q=el("div","ex","À lire en complément : ");q.appendChild(link(RD[r[5]][1],RD[r[5]][0]));m.appendChild(q)}
+b.appendChild(m);
+var ax=el("div","acts");ax.appendChild(el("div","ex","2 actions du jour"));
+r[6].forEach(function(p,i){var a=ACT[p[0]],s=a.steps[p[1]-1],row=el("div","act");
+var cb=chk("a"+id+"_"+i,function(ch){row.classList.toggle("done",ch)});aBoxes.push(cb);if(cb.checked)row.classList.add("done");
+var sp=el("span","t");sp.appendChild(el("b","",p[0]+" "+a.short+", étape "+p[1]+"/"+a.steps.length+" : "));sp.appendChild(document.createTextNode(s.t));
+(s.r||[]).forEach(function(rk){sp.appendChild(document.createTextNode(" "));sp.appendChild(link(RX[rk][1],"["+RX[rk][0]+"]"))});
+row.appendChild(cb);row.appendChild(sp);ax.appendChild(row);
+var nt=el("details","nt");nt.appendChild(el("summary","","Écrire mes notes sur cette étape"));nt.appendChild(ta("n_"+p[0]+"_s"+p[1],"Mes notes et le résultat de cette étape"));
+nt.addEventListener("toggle",function(){nt.querySelectorAll("textarea").forEach(grow)});ax.appendChild(nt)});
+if(wk||id>=8){var rt=el("div","rt");rt.appendChild(document.createTextNode("Routines : "));
+var L=[];if(wk)L.push(["i","3 contacts interpro"],["p","prospection de la journée"],["q","prospection après 18h00"]);
+if(id>=8)L.push(["w","10 min sur ma faiblesse n°1"]);
+L.forEach(function(x){var l=el("label");l.appendChild(chk(x[0]+id));l.appendChild(document.createTextNode(x[1]));rt.appendChild(l)});
+if(wk){var l1=el("label");l1.appendChild(document.createTextNode("Appels après 18h00 "));l1.appendChild(numIn("ap"+id,"nombre"));rt.appendChild(l1);
+var l2=el("label");l2.appendChild(document.createTextNode("RDV pris "));l2.appendChild(numIn("rv"+id,"nombre"));rt.appendChild(l2)}
+ax.appendChild(rt)}
+b.appendChild(ax);
+d.appendChild(c);d.appendChild(b);out.appendChild(d)})});
+RES.forEach(function(x){var li=el("li","",x[0]+" : ");li.appendChild(link(x[2],x[1]));rl.appendChild(li)});
+["n1","n2","n3","wk1","wk2","wk3"].forEach(function(k){var i=document.getElementById(k);if(store[k]!==undefined)i.value=store[k];i.oninput=function(){store[k]=i.value;save()}});
+var am=document.getElementById("amis");am.checked=!!store.amis;am.onchange=function(){store.amis=am.checked;save()};
+upd()}
+function cell(tr,x,tag){var c=document.createElement(tag||"td");c.textContent=x;tr.appendChild(c)}
+function renderResults(){var box=document.getElementById("rt_tbl");if(!box)return;box.innerHTML="";
+var wrap=el("div","tw"),t=document.createElement("table"),hd=document.createElement("tr");
+["Jour","Ressource","Actions /2","Interpro","Prosp. jour","Prosp. 18h","Appels 18h","RDV","Faiblesse"].forEach(function(x){cell(hd,x,"th")});t.appendChild(hd);
+var tot=[0,0,0,0,0,0,0],wkt=[0,0,0,0,0,0,0];
+function addTot(tr,lab,a){var r=document.createElement("tr");r.className="tot";cell(r,lab);a.forEach(function(x){cell(r,x)});t.appendChild(r)}
+for(var id=1;id<=21;id++){var d=dayRow(id),tr=document.createElement("tr");
+var vals=[d.ressource_faite?1:0,d.actions_faites,d.interpro?1:0,d.prospection_jour?1:0,d.prospection_18h?1:0,d.appels_18h||0,d.rdv_pris||0];
+var wkd=!/^(Sam|Dim)/.test(d.date);
+cell(tr,d.date.replace(" oct","").replace(" nov"," nov"));cell(tr,vals[0]?"✓":"");cell(tr,vals[1]);cell(tr,wkd?(vals[2]?"✓":""):"");cell(tr,wkd?(vals[3]?"✓":""):"");cell(tr,wkd?(vals[4]?"✓":""):"");cell(tr,wkd?(d.appels_18h===null?"":d.appels_18h):"");cell(tr,wkd?(d.rdv_pris===null?"":d.rdv_pris):"");cell(tr,id>=8?(d.faiblesse_10min?"✓":""):"");
+t.appendChild(tr);
+for(var j=0;j<7;j++){wkt[j]+=vals[j];tot[j]+=vals[j]}
+if(id%7===0){addTot(tr,"Semaine "+(id/7),[wkt[0],wkt[1],wkt[2],wkt[3],wkt[4],wkt[5],wkt[6],""].slice(0,8));wkt=[0,0,0,0,0,0,0]}}
+addTot(null,"Total",[tot[0],tot[1],tot[2],tot[3],tot[4],tot[5],tot[6],""]);
+wrap.appendChild(t);box.appendChild(wrap);
+var p=el("p","mut","Interpro : cible 45 contacts sur 15 jours ouvrés, ici 1 case cochée = 1 jour avec les 3 contacts faits. Les semaines sont du lundi au dimanche. Tant que les volumes sont petits, lisez les valeurs brutes.");box.appendChild(p);
+var sm=el("div","box");sm.appendChild(el("h3","","Avancement par action"));var ul=el("ul");
+Object.keys(ACT).forEach(function(k){var a=ACT[k],done=0;for(var i=1;i<=21;i++){var r=DR[i];if(!r)continue;r[6].forEach(function(pp,x){if(pp[0]===k&&store["a"+i+"_"+x])done++})}
+var li=el("li","",k+" "+a.short+" : "+done+" / "+a.steps.length+" étapes");ul.appendChild(li)});sm.appendChild(ul);
+["A1","A2"].forEach(function(k){var cnt={};var called=0;for(var r=0;r<ACT[k].trk;r++){var s=store["t_"+k+"_"+r+"_s"];if(s){cnt[s]=(cnt[s]||0)+1;if(s!=="À appeler")called++}}
+var nm=0;for(var r2=0;r2<ACT[k].trk;r2++){if(store["t_"+k+"_"+r2+"_p"]||store["t_"+k+"_"+r2+"_n"])nm++}
+sm.appendChild(el("p","",(k==="A1"?"Gros clients":"Gros tontiniers")+" : "+nm+" personnes listées, "+called+" appelées, "+(cnt["Recommandation obtenue"]||0)+" recommandations obtenues, "+(cnt["Rendez-vous obtenu"]||0)+" rendez-vous obtenus, "+(cnt["Refus"]||0)+" refus."))});
+box.appendChild(sm)}
+function upd(){var a=rBoxes.filter(function(x){return x.checked}).length,b=aBoxes.filter(function(x){return x.checked}).length;
+document.getElementById("cnt1").textContent=a+" / "+rBoxes.length;document.getElementById("bar1").style.width=(100*a/rBoxes.length)+"%";
+document.getElementById("cnt2").textContent=b+" / "+aBoxes.length;document.getElementById("bar2").style.width=(100*b/aBoxes.length)+"%";
+renderResults()}
+render();
+// export des notes
+document.getElementById("exb").onclick=function(){var L=[],g=function(x){return String(store[x]===undefined?"":store[x]).trim()};
+L.push("MES CHIFFRES DE DEPART","RDV la semaine derniere : "+g("n1"),"Objectif RDV par semaine : "+g("n2"),"Contacts interpro par jour : "+g("n3"),"Mes faiblesses : 1) "+g("wk1")+" 2) "+g("wk2")+" 3) "+g("wk3"),"");
+Object.keys(ACT).forEach(function(k){var a=ACT[k];L.push(k+" "+a.n);
+if(g("n_"+k+"_obj"))L.push("Objectif chiffré : "+g("n_"+k+"_obj"));
+if(g("n_"+k+"_ind"))L.push("Indicateurs : "+g("n_"+k+"_ind"));
+a.q.forEach(function(x,i){if(g("n_"+k+"_q"+i))L.push("Q : "+x,"R : "+g("n_"+k+"_q"+i))});
+a.steps.forEach(function(s,i){if(g("n_"+k+"_s"+(i+1)))L.push("Étape "+(i+1)+" ("+s.s+") : "+g("n_"+k+"_s"+(i+1)))});
+if(a.trk)for(var r=0;r<a.trk;r++){var f=["p","n","m","d","s","w"].map(function(c){return g("t_"+k+"_"+r+"_"+c)});if(f.join("")!=="")L.push("Appel "+(r+1)+" : "+f.join(" | "))}
+L.push("")});
+L.push("PROSPECTION APRES 18H00");for(var j=1;j<=21;j++){if(g("ap"+j)||g("rv"+j))L.push("Jour "+j+" : appels "+g("ap"+j)+", RDV "+g("rv"+j))}
+var txt=L.join("\n"),o=document.getElementById("exo");o.hidden=false;o.value=txt;grow(o);o.select();
+var ms=document.getElementById("exm");try{navigator.clipboard.writeText(txt).then(function(){ms.textContent="Copié dans le presse-papiers."},function(){ms.textContent="Sélectionné ci-dessous : copiez-le manuellement."})}catch(e){ms.textContent="Sélectionné ci-dessous : copiez-le manuellement."}};
+// base de données partagée (si disponible)
+(function(){if(!(window.claude&&claude.use)){setSync("Mode hors ligne : vos notes restent sur cet appareil.");return}
+claude.use("db").then(function(db){
+if(!db){setSync("Base non disponible dans cette vue : vos notes restent sur cet appareil.");return}
+return db.collection("entries").limit(1000).get().then(function(snap){
+var changed=false;
+snap.docs.forEach(function(d){var x=d.data();if(x&&typeof x.k==="string"){var s=JSON.stringify(x.v);last[x.k]=s;if(JSON.stringify(store[x.k])!==s){store[x.k]=x.v;changed=true}}});
+DB=db;
+try{localStorage.setItem("p21e",JSON.stringify(store))}catch(e){}
+if(changed)render();
+setSync("Connecté à la base. Vos notes sont enregistrées automatiquement.");
+save();
+return db.collection("jours").limit(30).get().then(function(js){if(js.size>=21)return;
+var chain=Promise.resolve();for(var id=1;id<=21;id++){(function(id){chain=chain.then(function(){return DB.doc("jours/j"+pad(id)).set(dayRow(id))})})(id)}return chain})})
+}).catch(function(){setSync("Base indisponible pour l'instant : vos notes restent sur cet appareil.")})})();
+</script>
+</body>
+</html>
