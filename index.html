@@ -207,11 +207,6 @@ button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px sol
 <div class="dash-ring"><svg viewBox="0 0 72 72"><circle class="bg" cx="36" cy="36" r="30"/><circle class="fg" id="dashRing" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/></svg><span class="dash-pct" id="dashPct">0%</span></div>
 <div><div class="dash-msg" id="dashMsg">C'est parti !</div><div class="dash-sub" id="dashSub">Coche ta première action pour démarrer</div></div>
 </div>
-<div class="dash-bars">
-<div class="dash-row"><span class="dash-lbl">Programme</span><div class="bar"><i id="dashBar0"></i></div><strong id="dashCnt0">0/63</strong></div>
-<div class="dash-row"><span class="dash-lbl" id="dashWkLbl">Semaine 1</span><div class="bar"><i id="dashBar1"></i></div><strong id="dashCnt1">0/0</strong></div>
-<div class="dash-row"><span class="dash-lbl" id="dashDayLbl">Aujourd'hui</span><div class="bar"><i id="dashBar2"></i></div><strong id="dashCnt2">0/3</strong></div>
-</div>
 <div class="dash-today" id="dashToday"></div>
 </div>
 
@@ -274,6 +269,14 @@ button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px sol
 <div class="prog"><span class="l">Ressources</span><div class="bar"><i id="bar1"></i></div><strong id="cnt1">0 / 21</strong></div>
 <div class="prog"><span class="l">Actions</span><div class="bar"><i id="bar2"></i></div><strong id="cnt2">0 / 42</strong></div>
 <div id="out"></div>
+
+<div class="dash" style="margin-top:24px">
+<div class="dash-bars">
+<div class="dash-row"><span class="dash-lbl" id="dashDayLbl">Aujourd'hui</span><div class="bar"><i id="dashBar2"></i></div><strong id="dashCnt2">0/3</strong></div>
+<div class="dash-row"><span class="dash-lbl" id="dashWkLbl">Semaine 1</span><div class="bar"><i id="dashBar1"></i></div><strong id="dashCnt1">0/0</strong></div>
+<div class="dash-row"><span class="dash-lbl">Programme</span><div class="bar"><i id="dashBar0"></i></div><strong id="dashCnt0">0/63</strong></div>
+</div>
+</div>
 
 <h2>Tableau de résultats</h2>
 <p class="mut">Mis à jour en direct. Les mêmes lignes sont enregistrées jour par jour dans la base, avec vos notes, pour que nous puissions analyser vos actions ensemble.</p>
@@ -542,7 +545,7 @@ b.appendChild(o);det.appendChild(b);card.appendChild(det);ac.appendChild(card)})
 var n=0;
 D.forEach(function(w){
 var wkCard=el("div","wk-card");
-var wkDet=document.createElement("details");wkDet.className="wk-det";wkDet.open=true;
+var wkDet=document.createElement("details");wkDet.className="wk-det";
 var wkSum=document.createElement("summary");wkSum.className="wk-summary";
 var wkLabel=el("span","wk-label",w[0].toUpperCase());
 var wkChev=el("span","wk-chevron","›");
