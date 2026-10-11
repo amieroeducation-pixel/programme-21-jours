@@ -101,13 +101,13 @@ details.nt{margin:0 0 8px 28px;padding:8px 14px;font-size:.85rem;background:rgba
 details.nt summary{font-weight:500;color:var(--acc);font-size:.85rem}
 
 .wk-card{background:var(--card);border:1px solid var(--glass-border);border-radius:24px;padding:20px 16px;margin-bottom:20px;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px);box-shadow:0 4px 24px var(--glass-glow),inset 0 1px 0 rgba(255,255,255,0.04)}
-.wk-card>details{background:transparent;border:none;padding:0;margin:0;box-shadow:none}
-.wk-card>details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;flex-wrap:wrap;-webkit-tap-highlight-color:transparent}
-.wk-card>details>summary::-webkit-details-marker{display:none}
-.wk-card>details>summary::marker{content:""}
-.wk-label{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--fghi);background:rgba(255,255,255,0.08);padding:5px 14px;border-radius:var(--r-pill)}
-.wk-chevron{color:var(--mut);font-size:1.1rem;transition:transform .2s}
-.wk-card>details[open]>.wk-summary .wk-chevron{transform:rotate(90deg)}
+details.wk-det{background:transparent!important;border:none!important;padding:0!important;margin:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+details.wk-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;flex-wrap:nowrap;-webkit-tap-highlight-color:transparent;padding:4px 0}
+details.wk-det>summary::-webkit-details-marker{display:none}
+details.wk-det>summary::marker{content:"";display:none}
+.wk-label{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--fghi);background:rgba(255,255,255,0.08);padding:5px 14px;border-radius:var(--r-pill);flex:none}
+.wk-chevron{color:var(--mut);font-size:1.2rem;transition:transform .25s;flex:none;margin-left:auto}
+details.wk-det[open]>.wk-summary .wk-chevron{transform:rotate(90deg)}
 .wk-progress{display:flex;align-items:center;gap:10px;flex:1;min-width:0;font-size:.8rem;color:var(--mut)}
 .wk-progress .bar{height:4px}
 .wk-progress strong{color:var(--acc);font-size:.82rem}
@@ -506,7 +506,7 @@ b.appendChild(o);det.appendChild(b);card.appendChild(det);ac.appendChild(card)})
 var n=0;
 D.forEach(function(w){
 var wkCard=el("div","wk-card");
-var wkDet=document.createElement("details");wkDet.open=true;
+var wkDet=document.createElement("details");wkDet.className="wk-det";wkDet.open=true;
 var wkSum=document.createElement("summary");wkSum.className="wk-summary";
 var wkLabel=el("span","wk-label",w[0].toUpperCase());
 var wkChev=el("span","wk-chevron","›");
