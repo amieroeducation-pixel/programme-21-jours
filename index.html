@@ -16,26 +16,29 @@
   --bg:#040810;--fg:#d0dce6;--fghi:#eef4f8;--mut:#6a8294;
   --card:rgba(255,255,255,0.05);--card-solid:#0b1620;
   --line:rgba(100,210,255,0.08);--line-soft:rgba(255,255,255,0.045);
-  --glass:rgba(255,255,255,0.07);--glass-border:rgba(255,255,255,0.14);--glass-border-hi:rgba(255,255,255,0.25);
-  --glass-glow:rgba(100,220,255,0.035);--glass-shine:rgba(255,255,255,0.10);
-  --acc:#30d5c8;--acc2:#6ef0be;--accbg:rgba(48,213,200,0.08);--acc-border:rgba(48,213,200,0.22);--acc-glow:rgba(48,213,200,0.12);
+  --glass:rgba(255,255,255,0.12);--glass-border:rgba(255,255,255,0.18);--glass-border-hi:rgba(255,255,255,0.30);
+  --glass-glow:rgba(100,220,255,0.04);--glass-shine:rgba(255,255,255,0.14);
+  --acc:#30d5c8;--acc2:#6ef0be;--accbg:rgba(48,213,200,0.10);--acc-border:rgba(48,213,200,0.25);--acc-glow:rgba(48,213,200,0.15);
   --pro:#5eaef7;--perso:#ef8faf;--mix:#f7d34f;
   --r:22px;--r-sm:16px;--r-pill:999px;
   --blur:20px;--blur-heavy:40px
 }
-@keyframes meshDrift{
-  0%{background-position:0% 0%,100% 100%,50% 50%}
-  50%{background-position:100% 30%,0% 70%,80% 20%}
-  100%{background-position:0% 0%,100% 100%,50% 50%}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-40px) scale(1.1)}
+  66%{transform:translate(-20px,30px) scale(0.95)}
 }
 *,*:before,*:after{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"SF Pro Text","SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
-  background-image:
-    radial-gradient(ellipse 70% 55% at 20% 10%,rgba(48,213,200,0.07),transparent 55%),
-    radial-gradient(ellipse 55% 45% at 85% 90%,rgba(94,174,247,0.06),transparent 50%),
-    radial-gradient(ellipse 50% 50% at 60% 50%,rgba(110,240,190,0.03),transparent 50%);
-  background-size:200% 200%,200% 200%,200% 200%;
-  animation:meshDrift 25s ease-in-out infinite}
+  min-height:100vh;position:relative;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle 320px at 15% 8%,rgba(48,213,200,0.18),transparent),
+    radial-gradient(circle 280px at 85% 25%,rgba(94,120,247,0.14),transparent),
+    radial-gradient(circle 350px at 50% 55%,rgba(48,213,200,0.10),transparent),
+    radial-gradient(circle 250px at 80% 80%,rgba(130,90,240,0.12),transparent),
+    radial-gradient(circle 300px at 20% 90%,rgba(48,180,220,0.10),transparent);
+  animation:orbFloat 20s ease-in-out infinite}
 main{max-width:480px;margin:0 auto;padding:20px 16px 80px;padding-top:max(20px,env(safe-area-inset-top))}
 
 h1,h2,h3{font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;font-weight:700;line-height:1.25;margin:0;letter-spacing:-0.025em}
@@ -51,10 +54,10 @@ h3{font-size:.95rem;margin:0 0 6px;color:var(--fghi)}
 
 .box{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--r);padding:16px;margin-bottom:14px;
   -webkit-backdrop-filter:blur(var(--blur-heavy)) saturate(1.8);backdrop-filter:blur(var(--blur-heavy)) saturate(1.8);
-  box-shadow:0 4px 24px rgba(0,0,0,0.2),0 0 0 0.5px rgba(255,255,255,0.06),inset 0 1px 0 var(--glass-shine),inset 0 -0.5px 0 rgba(255,255,255,0.03);
+  box-shadow:0 4px 24px rgba(0,0,0,0.25),0 0 0 0.5px rgba(255,255,255,0.08),inset 0 1px 0 var(--glass-shine),inset 0 -0.5px 0 rgba(255,255,255,0.04);
   position:relative;overflow:hidden}
 .box::before{content:"";position:absolute;inset:0;border-radius:inherit;
-  background:linear-gradient(160deg,rgba(255,255,255,0.11) 0%,rgba(255,255,255,0.02) 35%,transparent 55%);pointer-events:none}
+  background:linear-gradient(155deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.03) 30%,transparent 50%);pointer-events:none}
 .box ul,.box ol{margin:6px 0 8px;padding-left:18px}
 .box li{margin:4px 0;font-size:.9rem}
 .mut{color:var(--mut);font-size:.85rem}
@@ -155,10 +158,10 @@ details.wk-det[open]>.wk-summary .wk-chevron{transform:rotate(90deg)}
 .wk-days{margin-top:16px;position:relative;z-index:1}
 
 /* === DAY CARDS — Inner Glass (second layer) === */
-.day-card{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);border-radius:var(--r);padding:14px;margin-bottom:10px;
+.day-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:var(--r);padding:14px;margin-bottom:10px;
   transition:border-color .25s ease,box-shadow .25s ease,transform .2s ease;
-  -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
-  box-shadow:0 2px 12px rgba(0,0,0,0.1),inset 0 0.5px 0 rgba(255,255,255,0.07)}
+  -webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);
+  box-shadow:0 2px 12px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.10)}
 .day-card.prio{border-color:var(--acc-border);box-shadow:0 0 18px rgba(48,213,200,0.07),0 2px 12px rgba(0,0,0,0.1),inset 0 0.5px 0 rgba(255,255,255,0.07)}
 .day-card.done{opacity:.4}
 .day-card .day-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
