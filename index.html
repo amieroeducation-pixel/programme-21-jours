@@ -97,11 +97,17 @@ button:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px sol
 <p class="mut" id="sync" role="status">Enregistrement : connexion à la base en cours...</p>
 
 <div class="save-bar">
-<button type="button" class="primary" id="saveBtn">Enregistrer mes donn&eacute;es</button>
-<button type="button" class="secondary" id="restoreBtn">Restaurer une sauvegarde</button>
-<input type="file" id="restoreFile" accept=".json">
-<span class="msg" id="saveMsg"></span>
+<button type="button" class="primary" id="saveBtn">Enregistrer</button>
+<span class="msg" id="saveMsg">Vos donn&eacute;es sont sauvegard&eacute;es automatiquement.</span>
 </div>
+<details style="margin:0 0 12px;font-size:.9rem"><summary style="cursor:pointer;color:var(--mut)">Sauvegarder ou restaurer une copie de s&eacute;curit&eacute;</summary>
+<div class="save-bar" style="margin-top:8px">
+<button type="button" class="secondary" id="dlBtn">T&eacute;l&eacute;charger une copie</button>
+<button type="button" class="secondary" id="restoreBtn">Restaurer depuis un fichier</button>
+<input type="file" id="restoreFile" accept=".json">
+<span class="msg" id="dlMsg"></span>
+</div>
+</details>
 
 <p class="sub">Chaque jour : une ressource (le podcast Vendue de Laetitia Fall quand son thème colle mieux, sinon une vidéo), 2 actions importantes tirées de votre grille mandala, et des routines quotidiennes à part. Cochez au fur et à mesure.</p>
 
@@ -507,8 +513,15 @@ var chain=Promise.resolve();for(var id=1;id<=21;id++){(function(id){chain=chain.
 // Sauvegarde / Restauration
 (function(){
 var msg=document.getElementById("saveMsg");
+var dlMsg=document.getElementById("dlMsg");
 document.getElementById("saveBtn").onclick=function(){
   try{localStorage.setItem("p21e",JSON.stringify(store))}catch(e){}
+  var n=Object.keys(store).length;
+  msg.textContent="Enregistré ("+n+" entrées) à "+hm();
+  msg.style.color="var(--acc)";
+  setTimeout(function(){msg.textContent="Vos données sont sauvegardées automatiquement.";msg.style.color=""},3000);
+};
+document.getElementById("dlBtn").onclick=function(){
   var blob=new Blob([JSON.stringify(store,null,2)],{type:"application/json"});
   var url=URL.createObjectURL(blob);
   var a=document.createElement("a");
@@ -516,8 +529,8 @@ document.getElementById("saveBtn").onclick=function(){
   var d=new Date();
   a.download="programme-21j-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+".json";
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-  msg.textContent="Sauvegarde enregistrée à "+hm();
-  setTimeout(function(){msg.textContent=""},4000);
+  dlMsg.textContent="Fichier téléchargé.";
+  setTimeout(function(){dlMsg.textContent=""},3000);
 };
 var fi=document.getElementById("restoreFile");
 document.getElementById("restoreBtn").onclick=function(){fi.click()};
@@ -531,9 +544,9 @@ fi.onchange=function(){
       store=d;
       try{localStorage.setItem("p21e",JSON.stringify(store))}catch(e){}
       render();
-      msg.textContent="Données restaurées ("+Object.keys(d).length+" entrées)";
-      setTimeout(function(){msg.textContent=""},4000);
-    }catch(e){msg.textContent="Fichier invalide.";setTimeout(function(){msg.textContent=""},4000)}
+      dlMsg.textContent="Données restaurées ("+Object.keys(d).length+" entrées)";
+      setTimeout(function(){dlMsg.textContent=""},4000);
+    }catch(e){dlMsg.textContent="Fichier invalide.";setTimeout(function(){dlMsg.textContent=""},4000)}
   };
   r.readAsText(f);fi.value="";
 };
