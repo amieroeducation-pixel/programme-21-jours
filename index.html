@@ -801,13 +801,17 @@ document.getElementById("dashPct").textContent=pct+"%";
 document.getElementById("dashBar0").style.width=pct+"%";
 document.getElementById("dashCnt0").textContent=totalDone+"/"+totalAll;
 
-var today=new Date(),dd=today.getDate(),mm=today.getMonth();
+var today=new Date(),dd=today.getDate(),mm=today.getMonth(),yy=today.getFullYear();
 var todayId=0,todayWk=0,todayRec=null;
-var n2=0;
-D.forEach(function(w,wi){w.slice(1).forEach(function(r){n2++;
+var n2=0,firstProgDate=null,lastWk=0;
+D.forEach(function(w,wi){lastWk=wi;w.slice(1).forEach(function(r){n2++;
 var m=/(\d+)\s+(oct|nov)/.exec(r[0]);
 if(m){var d=parseInt(m[1]),mo=m[2]==="oct"?9:10;
+if(!firstProgDate)firstProgDate=new Date(yy,mo,d);
 if(mo===mm&&d===dd){todayId=n2;todayWk=wi;todayRec=r}}})});
+if(!todayId&&firstProgDate){var diff=Math.floor((today-firstProgDate)/86400000);
+if(diff>=0&&diff<21){todayWk=Math.floor(diff/7)}
+else if(diff>=21){todayWk=lastWk}}
 
 var wkStart=0,wkEnd=0,wkDone=0,wkTotal=0;
 for(var wi2=0;wi2<D.length;wi2++){
